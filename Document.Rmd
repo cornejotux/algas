@@ -23,6 +23,7 @@ knitr::opts_chunk$set(fig.align = "center")
 ```
 
 ```{r paquetes, echo=FALSE}
+rm(list=ls())
 require(dplyr)
 require(ggplot2)
 require(data.table)
@@ -84,40 +85,81 @@ precios2005     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 11, sk
 precios2006     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 12, skip = 3)
 precios2007     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 13, skip = 3)
 
-precios2008     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 13, skip = 4)
-precios2009     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 14, skip = 4)
-precios2010     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 15, skip = 4)
-precios2011     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 16, skip = 4)
-precios2012     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 17, skip = 4)
-precios2013     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 18, skip = 4)
-precios2014     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 19, skip = 4)
+precios2008     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 14, skip = 4)[-1,]
+precios2009     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 15, skip = 4)
+precios2010     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 16, skip = 4)[-1,]
+precios2011     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 17, skip = 4)[-1,]
+precios2012     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 18, skip = 4)[-1,]
+precios2013     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 19, skip = 4)[-1,]
+precios2014     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 20, skip = 4)[-1,]
 
-precios2015     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 20, skip = 5)
-precios2016     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 21, skip = 5)
-precios2017     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 22, skip = 5)
-precios2018     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 23, skip = 5)
+precios2015     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 21, skip = 5)[-1,]
+precios2016     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 22, skip = 5)[-1,]
+precios2017     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 23, skip = 5)[-1,]
+precios2018     <- read_excel(paste(path, "Precios.xls", sep=""), sheet = 24, skip = 5)
 
 ```
 
-Ahora se corrigen los nombre de las columnas de los datos.
+Ahora se corrigen los nombre de las columnas de los datos, pero los dejo escondidos, es mucho código.
 
-```{r nameCol}
+```{r nameCol, echo=FALSE}
 nombres <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
-             "cod_specie", "nombre_especie", "precios", "vol_transaccion", 
+             "cod_especie", "nombre_especie", "precios", "vol_transaccion", 
              "destino", "tipo_de_especie")
-precios1995 <- select(precios1995, -c('GRUPO DE ESPECIES'))
+nombre2 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", "cod_specie",
+             "nombre_especie", "precios", "vol_transaccion", "tipo_de_especie")
+nombre3 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
+            "cod_especie", "nombre_especie", "tipo_de_especie", "precios",
+            "vol_transaccion", "origen_informacion", "otro")     
+
+precios1995 <- select(precios1995, -c("GRUPO DE ESPECIES"))
 
 names(precios1995) <- names(precios1996) <- names(precios1997) <- nombres
 names(precios1998) <-  nombres 
-names(precios2001) <- names(precios2002) <- names(precios2002) <- nombres 
-names(precios2003) <- names(precios2004) <- nombres 
+names(precios2001) <- names(precios2002) <- names(precios2002) <- nombre2
+names(precios2003) <- names(precios2004) <- nombre3 
+
+nombre4 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
+            "cod_especie", "nombre_especie", "precios", "tipo_de_especie",
+            "pp_humedad", "vol_transaccion", "origen_informacion", "otro", "destino") 
+
+names(precios2005) <- names(precios2006) <- names(precios2007) <- nombre4 
+
+nombre5 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", "cod_especie",
+             "nombre_especie", "tipo_de_especie", "precios", "pp_humedad", 
+             "vol_transaccion", "origen_informacion", "otro", "destino" ) 
+
+names(precios2008) <- names(precios2009) <- nombre5
 
 
-precios <- rbind(precios1995, precios1996, precios1997, precios1998, 
-              precios2001, precios2002, precios2003, precios2004)
+nombre6 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", "cod_especie", 
+             "nombre_especie", "tipo_de_especie", "precios", "pp_humedad", 
+             "vol_transaccion", "origen_informacion", "otro", "destino") 
 
-names(precios1999) <- names(precios2000) <-
-  
+names(precios2010) <- names(precios2011) <- names(precios2013) <- names(precios2014)<- nombre6
+
+names(precios2012) <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", "cod_especie", 
+             "nombre_especie", "tipo_de_especie", "otro_tipo", "zona", "precios", 
+             "pp_humedad", "vol_transaccion", "origen_informacion", "otro", "destino")
+
+names(precios2015) <- names(precios2017) <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta",
+                                               "cod_especie",
+                        "nombre_especie", "precios", "pp_humedad", "vol_transaccion", 
+                        "origen_informacion", "otro", "destino")
+
+names(precios2016) <- names(precios2018) <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta",
+                                              "cod_especie", 
+                        "nombre_especie", "precios", "pp_humedad", "vol_transaccion", 
+                        "origen_informacion", "otro1", "destino", "otro2")
+
+```
+
+Ahora se combinan los set de datos en uno
+
+```{r mergeData}
+
+temp <- merge(precios1995, precios1996)
+
 ```
 
 

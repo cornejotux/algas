@@ -106,7 +106,7 @@ Ahora se corrigen los nombre de las columnas de los datos, pero los dejo escondi
 nombres <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
              "cod_especie", "nombre_especie", "precios", "vol_transaccion", 
              "destino", "tipo_de_especie")
-nombre2 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", "cod_specie",
+nombre2 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", "cod_especie",
              "nombre_especie", "precios", "vol_transaccion", "tipo_de_especie")
 nombre3 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
             "cod_especie", "nombre_especie", "tipo_de_especie", "precios",
@@ -116,7 +116,13 @@ precios1995 <- select(precios1995, -c("GRUPO DE ESPECIES"))
 
 names(precios1995) <- names(precios1996) <- names(precios1997) <- nombres
 names(precios1998) <-  nombres 
-names(precios2001) <- names(precios2002) <- names(precios2002) <- nombre2
+names(precios1999) <- names(precios2000) <- names(precios2001) <- nombre2
+
+names(precios2002) <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
+            "cod_especie", "nombre_especie", "precios", "vol_transaccion", 
+            "origen_informacion", "otro", "tipo_de_especie")    
+
+
 names(precios2003) <- names(precios2004) <- nombre3 
 
 nombre4 <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta", 
@@ -147,10 +153,15 @@ names(precios2015) <- names(precios2017) <- c("agno", "mes", "region", "cod_cale
                         "nombre_especie", "precios", "pp_humedad", "vol_transaccion", 
                         "origen_informacion", "otro", "destino")
 
+
 names(precios2016) <- names(precios2018) <- c("agno", "mes", "region", "cod_caleta", "nombre_caleta",
                                               "cod_especie", 
                         "nombre_especie", "precios", "pp_humedad", "vol_transaccion", 
                         "origen_informacion", "otro1", "destino", "otro2")
+precios2015$tipo_de_especie <- NA
+precios2016$tipo_de_especie <- NA
+precios2017$tipo_de_especie <- NA
+precios2018$tipo_de_especie <- NA
 
 ```
 
@@ -158,8 +169,20 @@ Ahora se combinan los set de datos en uno
 
 ```{r mergeData}
 
-temp <- merge(precios1995, precios1996)
+dataPrecios <- select(precios1995, agno, mes, region, cod_caleta, nombre_caleta, cod_especie, nombre_especie, precios,
+  vol_transaccion,tipo_de_especie)
 
+for (i in ls(pattern = "precios")[-1])
+{
+  
+  temp2 <- select(mget(i)[[1]], agno, mes, region, cod_caleta, nombre_caleta, cod_especie, nombre_especie,
+                  precios, vol_transaccion,tipo_de_especie)
+  dataPrecios <- rbind(dataPrecios, temp2)
+  rm(temp2)
+}
+
+rm(list=ls(pattern = "precios"))
+rm(list=ls(pattern = "nomb"))
 ```
 
 
